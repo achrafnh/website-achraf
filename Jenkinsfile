@@ -40,6 +40,16 @@ stages{
             }
         }
     }
+    stage('Force Rollout Restart') {
+    steps {
+        withKubeConfig([credentialsId: 'kubeconfigachraf']) {
+            script {
+                // This forces Kubernetes to restart the deployment and pull the latest image
+                sh 'kubectl rollout restart deployment devachraf'
+            }
+        }
+    }
+}
 
 }
 }
