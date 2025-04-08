@@ -23,7 +23,7 @@ stages{
                 
                 sh 'docker login -u hrefnhaila -p $DOCKER_HUB_PASSWORD'
                 sh 'docker build -t hrefnhaila/devops-mywebsite:v1 .'
-                sh 'docker push $IMAGE_NAME'
+                sh 'docker push hrefnhaila/devops-mywebsite:v1'
             }
         }
     }
