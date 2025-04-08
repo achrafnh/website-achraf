@@ -20,10 +20,10 @@ stages{
     stage('Docker Build & Push') {
         steps {
             withCredentials([string(credentialsId: 'DOCKER_HUB_PASSWORD_ACHRAF', variable: 'DOCKER_HUB_PASSWORD')]) {
-                
+                echo "print tag : $LOCAL_TAG"
                 sh 'docker login -u hrefnhaila -p $DOCKER_HUB_PASSWORD'
-                sh 'docker build -t hrefnhaila/devops-mywebsite:${env.LOCAL_TAG} .'
-                sh 'docker push hrefnhaila/devops-mywebsite:${env.LOCAL_TAG}'
+                sh 'docker build -t hrefnhaila/devops-mywebsite:v2 .'
+                sh 'docker push hrefnhaila/devops-mywebsite:v2'
             }
         }
     }
@@ -34,7 +34,7 @@ stages{
         steps {
             withKubeConfig([credentialsId: 'kubeconfigachraf']) {
                 script {
-                    sh "sed -i 's#replace#hrefnhaila/devops-mywebsite:${env.LOCAL_TAG}#g' k8s_deployment_service.yaml"
+                    sh "sed -i 's#replace#hrefnhaila/devops-mywebsite:v2#g' k8s_deployment_service.yaml"
                     sh 'kubectl apply -f k8s_deployment_service.yaml'
                 }
             }
