@@ -2,45 +2,42 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: devopsachraf
-  name: devopsachraf
+    app: devachraf
+  name: devachraf
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: devopsachraf
-  strategy: {}
+      app: devachraf
   template:
     metadata:
       labels:
-        app: devopsachraf
+        app: devachraf
     spec:
-      volumes:
-      - name: vol
-        emptyDir: {}
-      serviceAccountName: default
       containers:
       - image: replace
-        name: devopsachraf-container
+        name: devachraf-container
+        ports:
+        - containerPort: 80  
         volumeMounts:
         - mountPath: /tmp
           name: vol
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 100
-          readOnlyRootFilesystem: true
+      volumes:
+      - name: vol
+        emptyDir: {}
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: devopsachraf
-  name: devopsachraf-svc
+    app: devachraf
+  name: devachraf-svc
 spec:
-  ports:
-  - port: 8888
-    protocol: TCP
-    targetPort: 8888
-  selector:
-    app: devopsachraf
   type: NodePort
+  selector:
+    app: devachraf
+  ports:
+  - port: 8888          
+    targetPort: 80      
+    protocol: TCP
