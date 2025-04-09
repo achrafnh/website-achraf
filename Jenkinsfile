@@ -2,7 +2,7 @@ pipeline {
 	agent any
 
 stages{
-
+ //------------------------------------------------
   stage('Generate Local Tag') {
     steps {
         script {
@@ -15,7 +15,7 @@ stages{
     }
     }
 
-
+ //------------------------------------------------
 
     stage('Docker Build & Push') {
         steps {
@@ -28,27 +28,19 @@ stages{
         }
     }
 
- 
+ //------------------------------------------------
 
-    stage('Kubernetes Deployment') {
+    stage(' Deployment docker ') {
         steps {
-            withKubeConfig([credentialsId: 'kubeconfigachraf']) {
+           
                 script {
-                    sh "sed -i 's#replace#hrefnhaila/devops-mywebsite:$LOCAL_TAG#g' k8s_deployment_service.yaml"
-                    sh 'kubectl apply -f k8s_deployment_service.yaml'
+                  
+                    sh 'docker run -d  -P --name hrefnhaila$LOCAL_TAG hrefnhaila/devops-mywebsite:$LOCAL_TAG'
                 }
-            }
+           
         }
     }
-    stage('Force Rollout Restart') {
-    steps {
-        withKubeConfig([credentialsId: 'kubeconfigachraf']) {
-            script {
-                // This forces Kubernetes to restart the deployment and pull the latest image
-                sh 'kubectl rollout restart deployment devachraf'
-            }
-        }
-    }
+//------------------------------------------------
 }
 
 }
